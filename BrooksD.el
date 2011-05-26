@@ -1,5 +1,5 @@
 ;;;; maximize all new windows
-(add-to-list 'load-path (concat dotfiles-dir "/maxframe.el"))
+(add-to-list 'load-path (concat dotfiles-dir "maxframe.el"))
 (require 'maxframe)
 (add-hook 'window-setup-hook 'maximize-frame t)
 
@@ -17,3 +17,6 @@
 
 (global-set-key (kbd "C-c C-d") 'db48x/delete-ws-forward)
 (global-set-key (kbd "C-c M-d") 'db48x/delete-ws-backward)
+
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)

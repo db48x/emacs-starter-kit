@@ -3,6 +3,10 @@
 (require 'maxframe)
 (add-hook 'window-setup-hook 'maximize-frame t)
 
+;;;; elnode server
+(add-to-list 'load-path (concat dotfiles-dir "/elnode"))
+(load-library "elnode")
+
 ;;;; start in server mode
 (server-mode)
 

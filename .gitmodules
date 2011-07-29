@@ -4,3 +4,6 @@
 [submodule "js-beautify"]
 	path = js-beautify
 	url = https://github.com/einars/js-beautify.git
+[submodule "elnode"]
+	path = elnode
+	url = https://github.com/nicferrier/elnode.git

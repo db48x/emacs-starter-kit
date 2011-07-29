@@ -1,3 +1,6 @@
 [submodule "maxframe.el"]
 	path = maxframe.el
 	url = https://github.com/rmm5t/maxframe.el.git
+[submodule "js-beautify"]
+	path = js-beautify
+	url = https://github.com/einars/js-beautify.git

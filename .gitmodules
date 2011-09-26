@@ -9,4 +9,4 @@
 	url = https://github.com/nicferrier/elnode.git
 [submodule "js2-mode"]
 	path = js2-mode
-	url = https://github.com/mooz/js2-mode.git
+	url = git@github.com:db48x/js2-mode.git

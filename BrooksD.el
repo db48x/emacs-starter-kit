@@ -102,3 +102,13 @@
       (js2-highlight-vars-mode)))
 
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+
+;;;; set up org-mode
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "WAIT(w@/!)" "|" "DONE(d!)" "CANCELED(c@)")))
+(setq org-clock-persist 'history)
+(org-clock-persistence-insinuate)
+
+;;;; set up epresent for presenting org files
+(add-to-list 'load-path (concat dotfiles-dir "/epresent"))
+(require 'epresent)

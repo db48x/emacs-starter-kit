@@ -10,3 +10,6 @@
 [submodule "js2-mode"]
 	path = js2-mode
 	url = git@github.com:db48x/js2-mode.git
+[submodule "epresent"]
+	path = epresent
+	url = https://github.com/eschulte/epresent

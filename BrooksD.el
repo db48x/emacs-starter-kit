@@ -25,9 +25,8 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-(require 'js-beautify)
-(global-set-key (kbd "C-c C-t") 'js-beautify)
-
+;(require 'js-beautify)
+;(global-set-key (kbd "C-c C-t") 'js-beautify)
 
 (defun func-region (start end func)
   "run a function over the region between START and END in current buffer."
@@ -69,7 +68,7 @@
 (add-to-list 'load-path (concat dotfiles-dir "/js2-mode"))
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(require 'js2-highlight-vars)
+;(require 'js2-highlight-vars)
 
 (defun my-indent-sexp ()
   (interactive)

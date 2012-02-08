@@ -13,3 +13,6 @@
 [submodule "epresent"]
 	path = epresent
 	url = https://github.com/eschulte/epresent
+[submodule "zenburn-emacs"]
+	path = zenburn-emacs
+	url = git@github.com:db48x/zenburn-emacs.git

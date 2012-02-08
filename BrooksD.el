@@ -1,3 +1,10 @@
+;;;; themes
+(add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn-emacs")
+(load-theme 'zenburn)
+;(add-to-list 'load-path (concat dotfiles-dir "/zenburn-emacs"))
+;(require 'color-theme-zenburn)
+;(color-theme-zenburn)
+
 ;;;; maximize all new windows
 (add-to-list 'load-path (concat dotfiles-dir "maxframe.el"))
 (require 'maxframe)
@@ -8,7 +15,7 @@
 (load-library "elnode")
 
 ;;;; start in server mode
-(server-mode)
+(server-mode t)
 
 ;;;; handy functions for deleting whitespace
 (defun db48x/delete-ws-backward ()

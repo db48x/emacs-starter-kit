@@ -16,3 +16,6 @@
 [submodule "zenburn-emacs"]
 	path = zenburn-emacs
 	url = git@github.com:db48x/zenburn-emacs.git
+[submodule "bbdb"]
+	path = bbdb
+	url = git://git.savannah.nongnu.org/bbdb.git

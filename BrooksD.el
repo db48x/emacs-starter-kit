@@ -118,3 +118,36 @@
 ;;;; set up epresent for presenting org files
 (add-to-list 'load-path (concat dotfiles-dir "/epresent"))
 (require 'epresent)
+
+;;;; set up BBDB
+(setq bbdb-file "~/.emacs.d/.bbdb")
+(require 'bbdb-loaddefs "~/.emacs.d/bbdb/lisp/bbdb-loaddefs.el")
+(setq bbdb-update-records-p 'create
+      bbdb-message-pop-up 'horiz)
+(bbdb-initialize 'gnus 'message)
+(bbdb-mua-auto-update-init 'gnus 'message)
+;(add-to-list 'Info-directory-list "~/.emacs.d/bbdb/doc")
+
+(require 'dbus)
+(defun nm-is-connected()
+  (equal 70 (dbus-get-property
+             :system "org.freedesktop.NetworkManager" "/org/freedesktop/NetworkManager"
+             "org.freedesktop.NetworkManager" "State")))
+
+(defun switch-to-or-startup-gnus ()
+  "Switch to Gnus group buffer if it exists, otherwise start Gnus in plugged or unplugged state, 
+depending on network status."
+  (interactive)
+  (if (or (not (fboundp 'gnus-alive-p))
+          (not (gnus-alive-p)))
+      (if (nm-is-connected)
+          (gnus)
+        (gnus-unplugged))
+    (switch-to-buffer gnus-group-buffer)
+    (delete-other-windows)))
+
+(global-set-key (kbd "<f12>") 'switch-to-or-startup-gnus)
+
+(require 'gnus)
+(setq gnus-init-file "~/.emacs.d/.gnus.el"
+      gnus-startup-file "~/.emacs.d/.newsrc")

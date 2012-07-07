@@ -1,6 +1,6 @@
 ;;;; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn-emacs")
-(load-theme 'zenburn)
+ (load-theme 'zenburn)
 ;(add-to-list 'load-path (concat dotfiles-dir "/zenburn-emacs"))
 ;(require 'color-theme-zenburn)
 ;(color-theme-zenburn)
@@ -151,3 +151,7 @@ depending on network status."
 (require 'gnus)
 (setq gnus-init-file "~/.emacs.d/.gnus.el"
       gnus-startup-file "~/.emacs.d/.newsrc")
+
+;;;; Magit for git integration
+(add-to-list 'load-path (concat dotfiles-dir "magit"))
+(require 'magit)

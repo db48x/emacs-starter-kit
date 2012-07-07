@@ -19,3 +19,6 @@
 [submodule "bbdb"]
 	path = bbdb
 	url = git://git.savannah.nongnu.org/bbdb.git
+[submodule "magit"]
+	path = magit
+	url = git://github.com/magit/magit.git

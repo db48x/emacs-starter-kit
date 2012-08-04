@@ -4,6 +4,11 @@
                                   (nnimap-port 993)
                                   (nnimap-stream ssl)))
 
+(setq gnus-secondary-select-methods '((nnimap "cpf"
+                                               (nnimap-address "imap.gmail.com")
+                                               (nnimap-port 993)
+                                               (nnimap-stream ssl))))
+
 ;; and is sent via smtp
 (setq message-send-mail-function 'smtpmail-send-it
       smtpmail-default-smtp-server "smtp.mxes.net"

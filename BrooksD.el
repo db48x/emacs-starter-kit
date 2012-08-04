@@ -1,6 +1,6 @@
 ;;;; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn-emacs")
- (load-theme 'zenburn)
+;(load-theme 'zenburn)
 ;(add-to-list 'load-path (concat dotfiles-dir "/zenburn-emacs"))
 ;(require 'color-theme-zenburn)
 ;(color-theme-zenburn)
@@ -155,3 +155,24 @@ depending on network status."
 ;;;; Magit for git integration
 (add-to-list 'load-path (concat dotfiles-dir "magit"))
 (require 'magit)
+
+;;;; set up js2-refactor and dependencies
+(add-to-list 'load-path (concat dotfiles-dir "expand-region.el"))
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+(add-to-list 'load-path (concat dotfiles-dir "mark-multiple.el"))
+(require 'inline-string-rectangle)
+(global-set-key (kbd "C-x r t") 'inline-string-rectangle)
+(require 'mark-more-like-this)
+(global-set-key (kbd "C-<") 'mark-previous-like-this)
+(global-set-key (kbd "C->") 'mark-next-like-this)
+(global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
+(global-set-key (kbd "C-*") 'mark-all-like-this)
+;(require 'rename-sgml-tag)
+;(define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
+;(require 'js2-rename-var)
+;(define-key js2-mode-map (kbd "C-c C-r") 'js2-rename-var)
+
+(add-to-list 'load-path (concat dotfiles-dir "js2-refactor.el"))
+(require 'js2-refactor)

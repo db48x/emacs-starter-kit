@@ -101,8 +101,8 @@ RETURN: a list of sublists of list (the conses from list are reused),
           (nreverse result))))))
 
 
-(defvar server erc-server        "For get-password")
-(defvar nick   (first erc-nick)  "For get-password")
+;(defvar server erc-server        "For get-password")
+;(defvar nick   (first erc-nick)  "For get-password")
 (defun get-password (server nick)
   (cdr (assoc "password"
               (car

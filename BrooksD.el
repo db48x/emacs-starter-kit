@@ -177,4 +177,4 @@ depending on network status."
 (add-to-list 'load-path (concat dotfiles-dir "js2-refactor.el"))
 (require 'js2-refactor)
 
-(require 'init-erc.el)
+(load "init-erc.el")

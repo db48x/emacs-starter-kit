@@ -178,3 +178,6 @@ depending on network status."
 (require 'js2-refactor)
 
 (load "init-erc.el")
+
+;;;; word count mode
+(require 'wc-mode)

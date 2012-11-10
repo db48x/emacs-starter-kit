@@ -126,6 +126,11 @@
       bbdb-message-pop-up 'horiz)
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'gnus 'message)
+(setq bbdb-user-mail-address-re (regexp-opt '("db48x@yahoo.com"
+                                              "db48x@db48x.net"
+                                              "stone.of.erech@gmail.com"
+                                              "daniel.brooks@ask.com"
+                                              "dbrooks@cleanpowerfinance.com")))
 ;(add-to-list 'Info-directory-list "~/.emacs.d/bbdb/doc")
 
 (require 'dbus)
@@ -178,6 +183,10 @@ depending on network status."
 (require 'js2-refactor)
 
 (load "init-erc.el")
+
+(add-to-list 'load-path (concat dotfiles-dir "zencoding"))
+(require 'zencoding-mode)
+(add-hook 'sgml-mode-hook 'zencoding-mode)
 
 ;;;; word count mode
 (require 'wc-mode)

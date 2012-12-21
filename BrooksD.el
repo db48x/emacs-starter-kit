@@ -193,3 +193,7 @@ depending on network status."
 
 ;;;; word count mode
 (require 'wc-mode)
+
+;;;; use ido-mode everywhere
+(db48x/append-to-load-path "ido-ubiquitous")
+(require 'ido-ubiquitous)

@@ -1,18 +1,21 @@
+(defun db48x/append-to-load-path (dirname)
+  (add-to-list 'load-path (concat dotfiles-dir dirname)))
+
 ;;;; themes
 (add-to-list 'custom-theme-load-path "~/.emacs.d/zenburn-emacs")
 ;(load-theme 'zenburn)
-;(add-to-list 'load-path (concat dotfiles-dir "/zenburn-emacs"))
+;(db48x/append-to-load-path "/zenburn-emacs")
 ;(require 'color-theme-zenburn)
 ;(color-theme-zenburn)
 
 ;;;; maximize all new windows
-(add-to-list 'load-path (concat dotfiles-dir "maxframe.el"))
+(db48x/append-to-load-path "maxframe.el")
 (require 'maxframe)
 (add-hook 'window-setup-hook 'maximize-frame t)
 
 ;;;; elnode server
-(add-to-list 'load-path (concat dotfiles-dir "/elnode"))
-(load-library "elnode")
+;(db48x/append-to-load-path "/elnode")
+;(load-library "elnode")
 
 ;;;; start in server mode
 (server-mode t)
@@ -72,7 +75,7 @@
   (uniquify-all-lines-region (point-min) (point-max)))
 
 ;;;; set up js2-mode
-(add-to-list 'load-path (concat dotfiles-dir "/js2-mode"))
+(db48x/append-to-load-path "/js2-mode")
 (autoload 'js2-mode "js2-mode" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 ;(require 'js2-highlight-vars)
@@ -116,7 +119,7 @@
 (org-clock-persistence-insinuate)
 
 ;;;; set up epresent for presenting org files
-(add-to-list 'load-path (concat dotfiles-dir "/epresent"))
+(db48x/append-to-load-path "/epresent")
 (require 'epresent)
 
 ;;;; set up BBDB
@@ -158,33 +161,33 @@ depending on network status."
       gnus-startup-file "~/.emacs.d/.newsrc")
 
 ;;;; Magit for git integration
-(add-to-list 'load-path (concat dotfiles-dir "magit"))
+(db48x/append-to-load-path "magit")
 (require 'magit)
 
+;;;; multiple-cursors
+(db48x/append-to-load-path "multiple-cursors.el")
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "C-*") 'mc/mark-all-like-this)
+
 ;;;; set up js2-refactor and dependencies
-(add-to-list 'load-path (concat dotfiles-dir "expand-region.el"))
+(db48x/append-to-load-path "dash.el")
+(db48x/append-to-load-path "expand-region.el")
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
-
-(add-to-list 'load-path (concat dotfiles-dir "mark-multiple.el"))
-(require 'inline-string-rectangle)
-(global-set-key (kbd "C-x r t") 'inline-string-rectangle)
-(require 'mark-more-like-this)
-(global-set-key (kbd "C-<") 'mark-previous-like-this)
-(global-set-key (kbd "C->") 'mark-next-like-this)
-(global-set-key (kbd "C-M-m") 'mark-more-like-this) ; like the other two, but takes an argument (negative is previous)
-(global-set-key (kbd "C-*") 'mark-all-like-this)
 ;(require 'rename-sgml-tag)
 ;(define-key sgml-mode-map (kbd "C-c C-r") 'rename-sgml-tag)
 ;(require 'js2-rename-var)
 ;(define-key js2-mode-map (kbd "C-c C-r") 'js2-rename-var)
-
-(add-to-list 'load-path (concat dotfiles-dir "js2-refactor.el"))
+(db48x/append-to-load-path "js2-refactor.el")
 (require 'js2-refactor)
 
 (load "init-erc.el")
 
-(add-to-list 'load-path (concat dotfiles-dir "zencoding"))
+(db48x/append-to-load-path "zencoding")
 (require 'zencoding-mode)
 (add-hook 'sgml-mode-hook 'zencoding-mode)
 

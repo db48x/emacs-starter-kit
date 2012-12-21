@@ -34,3 +34,12 @@
 [submodule "zencoding"]
 	path = zencoding
 	url = git://github.com/rooney/zencoding.git
+[submodule "ido-ubiquitous"]
+	path = ido-ubiquitous
+	url = git://github.com/technomancy/ido-ubiquitous.git
+[submodule "multiple-cursors.el"]
+	path = multiple-cursors.el
+	url = git://github.com/magnars/multiple-cursors.el.git
+[submodule "dash.el"]
+	path = dash.el
+	url = git://github.com/magnars/dash.el.git

@@ -2,12 +2,30 @@
 (setq gnus-select-method '(nnimap "tuffmail"
                                   (nnimap-address "mail.mxes.net")
                                   (nnimap-port 993)
-                                  (nnimap-stream ssl)))
+                                  (nnimap-stream ssl)
+                                  (nnimap-record-commands t)))
 
-(setq gnus-secondary-select-methods '((nnimap "cpf"
-                                               (nnimap-address "imap.gmail.com")
-                                               (nnimap-port 993)
-                                               (nnimap-stream ssl))))
+(setq gnus-secondary-select-methods '((nnimap "gmail"
+                                              (nnimap-address "personal.imap.gmail.com")
+                                              (nnimap-port 993)
+                                              (nnimap-stream ssl))
+                                      (nnimap "stone.of.erech"
+                                              (nnimap-address "stone.of.erech.imap.gmail.com")
+                                              (nnimap-port 993)
+                                              (nnimap-stream ssl))
+                                      ;; (nnimap "cpf"
+                                      ;;          (nnimap-address "cpf.imap.gmail.com")
+                                      ;;          (nnimap-port 993)
+                                      ;;          (nnimap-stream ssl))
+                                      (nnimap "sonic"
+                                              (nnimap-address "imap.sonic.net")
+                                              (nnimap-port 993)
+                                              (nnimap-stream ssl))
+                                      ;; (nntp "news.bitusenet.com"
+                                      ;;       (nntp-open-connection-function nntp-open-ssl-stream)
+                                      ;;       (nntp-port-number "563")
+                                      ;;       (nntp-address "news.bitusenet.com"))
+                                      ))
 
 ;; and is sent via smtp
 (setq message-send-mail-function 'smtpmail-send-it
@@ -15,7 +33,9 @@
       smtpmail-smtp-service 587)
 
 ;; store sent mail on the server
-(setq gnus-message-archive-group "nnimap+tuffmail:INBOX/Sent")
+(setq gnus-message-archive-group '(("^nnimap\\+sonic" "nnimap+sonic:INBOX/Sent")
+                                   ("INBOX/SolarPermit" "nnimap+tuffmail:INBOX/SolarPermit")
+                                   (".*" "nnimap+tuffmail:INBOX/Sent")))
 
 ;; add messages I read to the agent cache?
 ;(add-hook 'gnus-agent-fetch-selected-article 'gnus-select-article-hook)
@@ -24,7 +44,25 @@
 (setq gnus-posting-styles '((".*"
                              (address "db48x@db48x.net")
                              (name "Daniel Brooks")
-                             (face (gnus-convert-png-to-face "~/Deus Ex Guy 48×48 6color.png")))))
+                             (face (gnus-convert-png-to-face "~/Deus Ex Guy 48×48 6color.png"))
+                             (X-SMTP-Server "smtp.mxes.net"))
+                            ("INBOX/SolarPermit"
+                             (address "db48x+solar@db48x.net"))
+                            ("^nnimap\\+gmail"
+                             (address "dlb48x@gmail.com")
+                             ("X-SMTP-Server" "imap.gmail.com"))
+                            ("^nnimap\\+stone.of.erech"
+                             (address "stone.of.erech@gmail.com")
+                             ("X-SMTP-Server" "imap.gmail.com"))
+                            ("^nnimap\\+cpf"
+                             (address "dbrooks@cleanpowerfinance.com")
+                             (organization "Clean Power Finance")
+                             ("X-SMTP-Server" "imap.gmail.com"))
+                            ("^nnimap\\+sonic"
+                             (address "db48x@sonic.net"))))
+
+(setq *my-emails* (apply #'append (mapcar (lambda (style) (cdr (assq 'address (cdr style)))) gnus-posting-styles)))
+(setq gnus-ignored-from-addresses (regexp-opt *my-emails*))
 
 ;; display email correctly
 ; show ticking elapsed time "header"
@@ -35,8 +73,8 @@
       gnus-treat-display-face 'head)
 
 (setq gnus-group-line-format "%p%M%s  %B%(%-40G %7uy/%-7ut %L%)\n"
-      gnus-group-line-format "%p%M%s  %B%(%-40g %7N/%-7t  %L%)\n"
-      gnus-summary-line-format "%U%R%z %16&user-date; %4k: %* %-32,32f %B %s\n")
+      gnus-group-line-format "%p%M%B %(%24s %-36G %7N/%-7t%) %L\n"
+      gnus-summary-line-format "%U%R%z %16&user-date; %4k: %uj %* %-32,32f‭ %B %s‭\n")
 
 (add-hook 'gnus-group-mode-hook 'gnus-topic-mode)
 (setq gnus-summary-same-subject "...")
@@ -55,6 +93,20 @@
       gnus-sum-thread-tree-vertical "│"
       gnus-sum-thread-tree-single-leaf "└─"
       gnus-sum-thread-tree-leaf-with-other "├─")
+
+(setq gnus-extra-headers '(To Cc BCc)
+      nnmail-extra-headers gnus-extra-headers)
+
+; estimate importance
+(defun gnus-user-format-function-j (headers)
+  (let ((emails (regexp-opt *my-emails*))
+        (to (gnus-extra-header 'To headers)))
+    (if (string-match emails to)
+        (if (string-match "," to) "~" "»")
+      (if (or (string-match emails (gnus-extra-header 'Cc headers))
+              (string-match emails (gnus-extra-header 'BCc headers)))
+          "~"
+        " "))))
 
 ; the total number of messages in the group
 (defun gnus-user-format-function-t (dummy)
@@ -180,3 +232,17 @@ when Gnus hangs on network outs or changes."
 ;; Add hooks for enabling/disabling integration on startup/shutdown:
 (add-hook 'gnus-started-hook 'gnus-nm-enable)
 (add-hook 'gnus-exit-gnus-hook 'gnus-nm-disable)
+
+;; let me use multiple smtp servers based on the posting style
+(eval-after-load "smtpmail"
+  '(progn
+    (defadvice smtpmail-via-smtp (around set-smtp-server-from-header activate)
+      (let ((smtpmail-smtp-server (or 
+                                   (save-restriction
+                                     (message-narrow-to-headers)
+                                     (mail-fetch-field "X-SMTP-Server"))
+                                   smtpmail-smtp-server)))
+        (message-remove-header "X-SMTP-Server")
+        ad-do-it))))
+
+(setq bbdb-ignore-message-alist '(("From" . "notifications@github.com")))

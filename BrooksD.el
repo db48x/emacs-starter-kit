@@ -129,11 +129,13 @@
       bbdb-message-pop-up 'horiz)
 (bbdb-initialize 'gnus 'message)
 (bbdb-mua-auto-update-init 'gnus 'message)
-(setq bbdb-user-mail-address-re (regexp-opt '("db48x@yahoo.com"
-                                              "db48x@db48x.net"
-                                              "stone.of.erech@gmail.com"
-                                              "daniel.brooks@ask.com"
-                                              "dbrooks@cleanpowerfinance.com")))
+(setq bbdb-user-mail-address-re (mapconcat 'identity
+                                           (list "db48x\\(?:+.*\\)\\{0,1\\}@db48x.net"
+                                                 (regexp-opt '("db48x@yahoo.com"
+                                                               "stone.of.erech@gmail.com"
+                                                               "daniel.brooks@ask.com"
+                                                               "dbrooks@cleanpowerfinance.com")))
+                                           "\\|"))
 ;(add-to-list 'Info-directory-list "~/.emacs.d/bbdb/doc")
 
 (require 'dbus)
@@ -152,6 +154,7 @@ depending on network status."
           (gnus)
         (gnus-unplugged))
     (switch-to-buffer gnus-group-buffer)
+    (hl-line-mode)
     (delete-other-windows)))
 
 (global-set-key (kbd "<f12>") 'switch-to-or-startup-gnus)
@@ -197,3 +200,55 @@ depending on network status."
 ;;;; use ido-mode everywhere
 (db48x/append-to-load-path "ido-ubiquitous")
 (require 'ido-ubiquitous)
+(ido-ubiquitous-mode)
+
+;;;; custom org radio table translator
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((latex . t)))
+
+(defun orgtbl-to-latex-invoice (table params)
+  "Convert the Orgtbl mode TABLE to LaTeX invoice."
+  (let* ((alignment (mapconcat (lambda (x) (if x "r" "l"))
+                               org-table-last-alignment ""))
+         (rate (number-to-string (plist-get params :rate)))
+         (params2
+          (list
+           :tstart ""
+           :tend ""
+           :lstart "\\Fee" :sep "" :lend ""
+           :fmt "{%s}" :efmt "%s\\,(%s)" :hline "\\hline"))
+         (table-body (butlast (nthcdr 2 table) 2))
+         (table-alist nil))
+    (progn (mapc (function (lambda (row)
+                             (let* ((date (format-time-string "%B %e, %Y" (apply 'encode-time (parse-time-string (nth 0 row)))))
+                                    (hours (string-to-number (nth 2 row)))
+                                    (entry (assoc date table-alist)))
+                               (if entry
+                                   (setf (caddr entry) (number-to-string (+ hours (string-to-number (caddr entry)))))
+                                 (add-to-list 'table-alist (list date rate (number-to-string hours)) t)))))
+                 table-body)
+           (orgtbl-to-generic table-alist params2))))
+
+(defun orgtbl-by-days-to-latex-invoice (table params)
+  "Convert the Orgtbl mode TABLE to LaTeX invoice."
+  (let* ((rate (number-to-string (plist-get params :rate)))
+         (params2
+          (list
+           :tstart ""
+           :tend ""
+           :lstart "\\Fee" :sep "" :lend ""
+           :fmt "{%s}" :efmt "%s\\,(%s)" :hline "\\hline"))
+         (table-body (butlast (nthcdr 2 table) 2))
+         (fees (mapcar (function (lambda (row)
+                                   (let ((date (mapcar #'string-to-number
+                                                       (split-string (nth 0 row)
+                                                                     "/"))))
+                                     (list (format-time-string "%B %e, %Y"
+                                                               (encode-time 0 0 0
+                                                                            (nth 1 date) (nth 0 date) (nth 2 date)
+                                                                            nil nil nil))
+                                           rate
+                                           (nth 1 row)))))
+                       table-body)))
+    (orgtbl-to-generic fees params2)))
